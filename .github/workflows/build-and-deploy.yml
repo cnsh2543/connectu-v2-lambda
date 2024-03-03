@@ -41,7 +41,7 @@ jobs:
           cache: "npm"
 
       - name: Install Node.js dependencies
-        run: npm ci
+        run: npm ci --production
       
       - name: Remove duplicates
         run: npm dedupe

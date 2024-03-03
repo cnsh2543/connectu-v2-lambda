@@ -2,7 +2,6 @@ const request = require("supertest");
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const { pool } = require("../controllers/pools");
 const bodyParser = require("body-parser");
 const SignupRouter = require("../routers/signup");
 const axios = require("axios");
@@ -86,7 +85,7 @@ describe("Password Validation", () => {
 		);
 	});
 
-	it("should accept when password is valid and matches rePassword", async () => {
+	it("valid when password is valid and matches", async () => {
 		const response = await request(app)
 			.post("/signup/signup")
 			.send({ password: "validPassword123", rePassword: "validPassword123" });

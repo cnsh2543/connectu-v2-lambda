@@ -68,7 +68,7 @@ jobs:
         uses: github/codeql-action/analyze@v3
 
   security-DAST-Staging-URL:
-    needs: lint
+    needs: [lint, codeQL-analysis, security-SAST-code]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -82,7 +82,7 @@ jobs:
           target: "xxxxx"
 
   performance-test:
-    needs: lint
+    needs: [lint, codeQL-analysis, security-SAST-code]
     runs-on: ubuntu-latest
     steps:
       - name: Run Lighthouse
@@ -93,7 +93,14 @@ jobs:
 
   prepare-release:
     runs-on: ubuntu-latest
-    needs: [performance-test, security-DAST-Staging-URL, security-SAST-code]
+    needs:
+      [
+        performance-test,
+        security-DAST-Staging-URL,
+        security-SAST-code,
+        lint,
+        codeQL-analysis,
+      ]
     outputs:
       commit-message: ${{ steps.commit-message.outputs.message }}
     steps:
@@ -141,7 +148,7 @@ jobs:
   build-and-deploy-prod-env:
     name: Deploy to AWS Lambda
     runs-on: ubuntu-latest
-    needs: prepare-release
+    needs: build-and-deploy-test-env
 
     steps:
       - name: Check out the repository

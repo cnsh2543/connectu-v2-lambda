@@ -9,7 +9,10 @@ on:
   pull_request:
     branches: ["main"]
 
-permissions: read-all
+permissions:
+  actions: read
+  contents: read
+  security-events: write
 
 jobs:
   lint:
@@ -115,7 +118,7 @@ jobs:
         run: echo "::set-output name=message::$(git log -1 --pretty=%B)"
 
   build-and-deploy-test-env:
-    name: Deploy to AWS Lambda
+    name: Push to AWS development environment
     runs-on: ubuntu-latest
     needs: prepare-release
     environment:
@@ -152,7 +155,7 @@ jobs:
           --zip-file fileb://send-express.zip
 
   build-and-deploy-prod-env:
-    name: Deploy to AWS Lambda
+    name: Push to AWS production environment
     runs-on: ubuntu-latest
     needs: build-and-deploy-test-env
     environment:
